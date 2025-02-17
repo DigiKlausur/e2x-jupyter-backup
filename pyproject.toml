@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "e2x-jupyter-backup"
+description = "An extension to keep backups of every save state of a Jupyter notebook."
+readme = "README.md"
+requires-python = ">=3.7"
+license = "AGPL-3.0"
+authors = [
+    {name = "Tim Metzler", email = "tim.metzler@h-brs.de"},
+]
+classifiers = [
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+keywords = ["e2x", "backup", "jupyter"]
+dynamic = ["version"]
+dependencies = [
+    "jupyter_core",
+]
+
+[project.urls]
+Issues = "https://github.com/Digiklausur/e2x-jupyter-backup/issues"
+Source = "https://github.com/Digiklausur/e2x-jupyter-backup"
+
+[project.optional-dependencies]
+dev = [
+    "pre-commit",
+    "hatchling",
+]
+
+[tool.hatch.version]
+path = "e2x_jupyter_backup/_version.py"
+
+[tool.ruff]
+line-length = 100
+ignore-init-module-imports = true
+select = ["F", "E", "I"]
