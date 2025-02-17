@@ -46,7 +46,7 @@ path = "e2x_jupyter_backup/_version.py"
 github_url = "https://github.com/Digiklausur/e2x-jupyter-backup/"
 
 [tool.tbump.version]
-current = "0.0.1"
+current = "0.1.0"
 
 regex = '''
   (?P<major>\d+)
