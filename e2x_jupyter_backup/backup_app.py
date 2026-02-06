@@ -98,10 +98,12 @@ class E2xBackupApp(JupyterApp):
             filename: Original notebook filename to prune backups for.
         """
         backup_files = sorted(self.list_backups(backup_dir, filename), reverse=True)
-        remaining_backups = backup_files[: self.max_backup_files]
-        for old_backup in backup_files[self.max_backup_files :]:
-            old_backup.unlink()
-            self.log.info(f"Deleted old backup {old_backup}")
+        remaining_backups = backup_files
+        if self.max_backup_files > 0:        
+            remaining_backups = backup_files[: self.max_backup_files]
+            for old_backup in backup_files[self.max_backup_files :]:
+                old_backup.unlink()
+                self.log.info(f"Deleted old backup {old_backup}")
         if self.max_backup_size_mb > 0:
             total_size_mb = sum(f.stat().st_size for f in remaining_backups) / (1024 * 1024)
             while total_size_mb > self.max_backup_size_mb and remaining_backups:
@@ -157,7 +159,7 @@ class E2xBackupApp(JupyterApp):
         """
         if model["type"] != "notebook":
             return
-        if self.max_backup_files <= 0:
+        if self.max_backup_files == 0 or self.max_backup_size_mb == 0:
             self.log.info("Backup disabled")
             return
 
