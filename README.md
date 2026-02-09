@@ -87,6 +87,46 @@ notebooks/
 - Count: Keeps only the most recent `max_backup_files` backups
 - Size: Removes oldest backups if total size exceeds `max_backup_size_mb`
 
+## Development
+
+### Running Tests
+
+To run the test suite, first install the package with test dependencies:
+
+```bash
+pip install -e ".[test]"
+```
+
+Then run the tests using pytest:
+
+```bash
+# Run all tests
+pytest
+
+# Run with coverage report
+pytest --cov=e2x_jupyter_backup --cov-report=html
+
+# Run specific test file
+pytest tests/test_backup_app.py
+
+# Run specific test class or method
+pytest tests/test_backup_app.py::TestListBackups
+pytest tests/test_backup_app.py::TestListBackups::test_list_valid_backups
+
+# Run with verbose output
+pytest -v
+
+# Run without coverage
+pytest --no-cov
+```
+
+The test suite includes:
+- **Unit tests**: Individual method testing with mocks and fixtures
+- **Integration tests**: Complete backup workflows
+- **Edge case testing**: Boundary conditions and error handling
+
+Test coverage reports are generated in `htmlcov/` directory.
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

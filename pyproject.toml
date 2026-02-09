@@ -38,6 +38,11 @@ dev = [
     "hatchling",
     "tbump"
 ]
+test = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "pytest-mock>=3.10",
+]
 
 [tool.hatch.version]
 path = "e2x_jupyter_backup/_version.py"
