@@ -99,7 +99,7 @@ class E2xBackupApp(JupyterApp):
         """
         backup_files = sorted(self.list_backups(backup_dir, filename), reverse=True)
         remaining_backups = backup_files
-        if self.max_backup_files > 0:        
+        if self.max_backup_files > 0:
             remaining_backups = backup_files[: self.max_backup_files]
             for old_backup in backup_files[self.max_backup_files :]:
                 old_backup.unlink()
@@ -125,17 +125,6 @@ class E2xBackupApp(JupyterApp):
         if (latest_time - second_latest_time).total_seconds() < self.min_seconds_between_backups:
             return True
         return False
-    
-    def get_backup_filename(self, backup_dir: Path, filename: str, timestamp: datetime) -> Path:
-        if self.should_overwrite_backup(backup_dir, filename, timestamp):
-            existing_backups = sorted(self.list_backups(backup_dir, filename), reverse=True)
-            return existing_backups[0]
-        else:
-            timestamp_str = timestamp.strftime("%Y-%m-%d_%H-%M-%S")
-            backup_filename = f"{timestamp_str}_{filename}"
-            return backup_dir / backup_filename
-        
-
 
     def backup(self, model: Dict[str, Any], os_path: str, contents_manager: Any) -> None:
         """Create a timestamped backup of a notebook file.
@@ -184,12 +173,12 @@ class E2xBackupApp(JupyterApp):
         # Skip backup if it already exists for this timestamp
         if backup_path.exists():
             return
-        
+
         if self.should_overwrite_backup(backup_dir, filename, current_time):
             self.log.info("Overwriting the most recent backup due to minimum interval setting.")
             # Get the most recent backup file and unlink it
             existing_backups = sorted(self.list_backups(backup_dir, filename), reverse=True)
-            existing_backups[0].unlink()        
+            existing_backups[0].unlink()
 
         shutil.copy2(os_path, backup_path)
         self.log.info(f"Backed up {os_path} to {backup_path}")
