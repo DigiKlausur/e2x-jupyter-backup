@@ -1,6 +1,6 @@
-from unittest.mock import patch
 from datetime import datetime
 from pathlib import Path
+from unittest.mock import patch
 
 
 class TestE2xBackupApp:
@@ -165,7 +165,8 @@ class TestE2xBackupApp:
             mock_datetime.now.return_value = current_time
             backup_app.backup(notebook_model, str(sample_notebook), mock_contents_manager)
 
-            # Create a new backup within the min_seconds_between_backups window (should remove the previous backup)
+            # Create a new backup within the min_seconds_between_backups window
+            # (should remove the previous backup)
             current_time = base_time.replace(second=base_time.second + 6)
             mock_datetime.now.return_value = current_time
             backup_app.backup(notebook_model, str(sample_notebook), mock_contents_manager)
@@ -185,9 +186,9 @@ class TestE2xBackupApp:
             backup_files = backup_app.list_backups(
                 Path(mock_contents_manager.root_dir) / ".backup", "test_notebook.ipynb"
             )
-            assert (
-                len(backup_files) == 3
-            )  # Should only have 3 backups due to time between last two backups being greater than min_seconds_between_backups
+            # Should only have 3 backups due to time between last two backups being greater than
+            # min_seconds_between_backups
+            assert len(backup_files) == 3
 
     def test_backup_with_absolute_backup_dir(
         self,

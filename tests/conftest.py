@@ -1,9 +1,7 @@
 """Shared fixtures for e2x-jupyter-backup tests."""
 
-from datetime import datetime, timedelta
-from logging import Logger
 import os
-from pathlib import Path
+from logging import Logger
 from unittest.mock import MagicMock
 
 import nbformat
