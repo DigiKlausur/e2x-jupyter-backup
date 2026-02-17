@@ -18,14 +18,6 @@ def temp_notebook_dir(tmp_path):
 
 
 @pytest.fixture
-def temp_backup_dir(tmp_path):
-    """Create a temporary backup directory."""
-    backup_dir = tmp_path / "backups"
-    backup_dir.mkdir()
-    return backup_dir
-
-
-@pytest.fixture
 def sample_notebook(temp_notebook_dir):
     """Create a sample notebook file."""
     notebook_path = temp_notebook_dir / "test_notebook.ipynb"
