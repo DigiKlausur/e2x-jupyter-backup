@@ -108,9 +108,10 @@ class E2xBackupApp(JupyterApp):
             total_size_mb = sum(f.stat().st_size for f in remaining_backups) / (1024 * 1024)
             while total_size_mb > self.max_backup_size_mb and remaining_backups:
                 oldest_backup = remaining_backups.pop()
+                oldest_size_mb = oldest_backup.stat().st_size / (1024 * 1024)
                 oldest_backup.unlink()
                 self.log.info(f"Deleted old backup {oldest_backup} to reduce total size")
-                total_size_mb = sum(f.stat().st_size for f in remaining_backups) / (1024 * 1024)
+                total_size_mb -= oldest_size_mb
 
     def should_overwrite_backup(self, backup_dir: Path, filename: str, timestamp: datetime) -> bool:
         """Decide whether a new backup should overwrite the most recent backup.
