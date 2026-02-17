@@ -80,7 +80,7 @@ class E2xBackupApp(JupyterApp):
         # First find all files that end in filename
         candidate_files = backup_dir.glob(f"*{filename}")
         # Timestamp pattern
-        timestamp_pattern = re.compile(r"^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}_$")
+        timestamp_pattern = re.compile(r"^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}$")
         # Filter everything based on the timestamps
         backup_files = []
         for candidate_file in candidate_files:
