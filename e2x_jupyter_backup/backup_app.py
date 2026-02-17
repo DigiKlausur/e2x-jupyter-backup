@@ -75,6 +75,8 @@ class E2xBackupApp(JupyterApp):
         Returns:
             List of Path objects pointing to backup files, unsorted.
         """
+        if not backup_dir.exists():
+            return []
         # First find all files that end in filename
         candidate_files = backup_dir.glob(f"*{filename}")
         # Timestamp pattern
