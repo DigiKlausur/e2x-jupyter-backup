@@ -182,7 +182,6 @@ class E2xBackupApp(JupyterApp):
 
         shutil.copy2(os_path, backup_path)
         self.log.info(f"Backed up {os_path} to {backup_path}")
-        self.log.info(f"Contents Manager root dir: {contents_manager.root_dir}")
 
         # Prune old backups
         self.prune_old_backups(backup_dir, filename)
