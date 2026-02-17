@@ -3,7 +3,7 @@ import re
 import shutil
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Dict, List
 
 from jupyter_core.application import JupyterApp
 from traitlets import Int, Unicode
@@ -61,7 +61,7 @@ class E2xBackupApp(JupyterApp):
     )
     backup_dir = Unicode(".backup", config=True, help="Directory to store backups in")
 
-    def list_backups(self, backup_dir: Path, filename: str) -> list[Path]:
+    def list_backups(self, backup_dir: Path, filename: str) -> List[Path]:
         """List all backup files for a given notebook filename.
 
         Searches for files matching the backup naming pattern:
