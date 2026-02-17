@@ -195,40 +195,44 @@ class E2xBackupApp(JupyterApp):
         if self.max_backup_files == 0 or self.max_backup_size_mb == 0:
             self.log.info("Backup disabled")
             return
+        
+        try:
 
-        full_backup_dir = Path(os.path.expandvars(self.backup_dir)).expanduser()
+            full_backup_dir = Path(os.path.expandvars(self.backup_dir)).expanduser()
 
-        notebook_parent_dir, filename = os.path.split(os_path)
+            notebook_parent_dir, filename = os.path.split(os_path)
 
-        # Determine backup directory path based on whether backup_dir is absolute or relative
-        if full_backup_dir.is_absolute():
-            relative_path = Path(notebook_parent_dir).relative_to(contents_manager.root_dir)
-            backup_dir = full_backup_dir / relative_path
-        else:
-            backup_dir = Path(notebook_parent_dir) / full_backup_dir
+            # Determine backup directory path based on whether backup_dir is absolute or relative
+            if full_backup_dir.is_absolute():
+                relative_path = Path(notebook_parent_dir).relative_to(contents_manager.root_dir)
+                backup_dir = full_backup_dir / relative_path
+            else:
+                backup_dir = Path(notebook_parent_dir) / full_backup_dir
 
-        backup_dir.mkdir(parents=True, exist_ok=True)  # Ensure backup directory exists
+            backup_dir.mkdir(parents=True, exist_ok=True)  # Ensure backup directory exists
 
-        current_time = datetime.now()
-        timestamp_str = current_time.strftime("%Y-%m-%d_%H-%M-%S")
-        backup_filename = f"{timestamp_str}_{filename}"
-        backup_path = backup_dir / backup_filename
+            current_time = datetime.now()
+            timestamp_str = current_time.strftime("%Y-%m-%d_%H-%M-%S")
+            backup_filename = f"{timestamp_str}_{filename}"
+            backup_path = backup_dir / backup_filename
 
-        # Skip backup if it already exists for this timestamp
-        if backup_path.exists():
-            return
+            # Skip backup if it already exists for this timestamp
+            if backup_path.exists():
+                return
 
-        if self.should_overwrite_backup(backup_dir, filename, current_time):
-            self.log.info("Overwriting the most recent backup due to minimum interval setting.")
-            # Get the most recent backup file and unlink it
-            existing_backups = sorted(self.list_backups(backup_dir, filename), reverse=True)
-            existing_backups[0].unlink()
+            if self.should_overwrite_backup(backup_dir, filename, current_time):
+                self.log.info("Overwriting the most recent backup due to minimum interval setting.")
+                # Get the most recent backup file and unlink it
+                existing_backups = sorted(self.list_backups(backup_dir, filename), reverse=True)
+                existing_backups[0].unlink()
 
-        shutil.copy2(os_path, backup_path)
-        self.log.info(f"Backed up {os_path} to {backup_path}")
+            shutil.copy2(os_path, backup_path)
+            self.log.info(f"Backed up {os_path} to {backup_path}")
 
-        # Prune old backups
-        self.prune_old_backups(backup_dir, filename)
+            # Prune old backups
+            self.prune_old_backups(backup_dir, filename)
+        except Exception as e:
+            self.log.error(f"Failed to create backup for {os_path}: {e}")
 
 
 def get_post_save_hook() -> Callable:
