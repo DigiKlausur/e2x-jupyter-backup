@@ -195,9 +195,8 @@ class E2xBackupApp(JupyterApp):
         if self.max_backup_files == 0 or self.max_backup_size_mb == 0:
             self.log.info("Backup disabled")
             return
-        
-        try:
 
+        try:
             full_backup_dir = Path(os.path.expandvars(self.backup_dir)).expanduser()
 
             notebook_parent_dir, filename = os.path.split(os_path)
