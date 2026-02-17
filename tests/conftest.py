@@ -82,13 +82,3 @@ def notebook_model():
         "name": "test_notebook.ipynb",
         "path": "test_notebook.ipynb",
     }
-
-
-@pytest.fixture
-def file_model():
-    """Create a sample file model dictionary (not a notebook)."""
-    return {
-        "type": "file",
-        "name": "test_file.txt",
-        "path": "test_file.txt",
-    }
