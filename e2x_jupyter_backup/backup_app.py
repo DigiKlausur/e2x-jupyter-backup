@@ -84,7 +84,8 @@ class E2xBackupApp(JupyterApp):
         # Filter everything based on the timestamps
         backup_files = []
         for candidate_file in candidate_files:
-            part = candidate_file.name.replace(filename, "")
+            # Remove filename and trailing underscore to isolate the timestamp part
+            part = candidate_file.name[: -len(filename) - 1]
             if timestamp_pattern.match(part):
                 backup_files.append(candidate_file)
         return backup_files
