@@ -46,7 +46,8 @@ c = get_config()
 c.E2xBackupApp.backup_dir = '.backup'
 
 # Maximum number of backup files to keep per notebook
-# Set to 0 to disable backups, set to -1 to keep unlimited backups
+# Set to 0 to completely disable backups
+# Set to -1 to keep an unlimited number of backups
 # Default: 10
 c.E2xBackupApp.max_backup_files = 10
 
