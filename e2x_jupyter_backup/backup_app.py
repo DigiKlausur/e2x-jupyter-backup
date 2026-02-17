@@ -46,7 +46,8 @@ class E2xBackupApp(JupyterApp):
         config=True,
         help=(
             "Maximum size of all backups for a single notebook in megabytes. "
-            "Set to 0 to disable size limit."
+            "Set to 0 to disable backups."
+            "Set to -1 to disable size-based pruning (only count-based pruning applies)."
         ),
     )
 
