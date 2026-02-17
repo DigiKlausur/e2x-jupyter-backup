@@ -113,6 +113,48 @@ class E2xBackupApp(JupyterApp):
                 total_size_mb = sum(f.stat().st_size for f in remaining_backups) / (1024 * 1024)
 
     def should_overwrite_backup(self, backup_dir: Path, filename: str, timestamp: datetime) -> bool:
+        """Decide whether a new backup should overwrite the most recent backup.
+
+        This prevents backup clutter during rapid-save bursts (e.g., autosave, Ctrl+S spam)
+        while preserving backups from distinct editing sessions.
+
+        The strategy is:
+        - Preserve the first save that starts a new editing session
+        - Overwrite subsequent rapid saves within the same burst
+
+        Examples (assuming min_seconds_between_backups = 20 seconds):
+
+        Scenario 1 - Normal interval between saves (no overwrite):
+            Existing backups: 10:00:00 (70 sec ago), 09:58:00
+            New save: 10:01:10 (now)
+            → Don't overwrite. Each save represents a distinct editing moment.
+
+        Scenario 2 - First rapid save after normal interval (no overwrite):
+            Existing backups: 10:00:50 (15 sec ago), 10:00:00
+            New save: 10:01:05 (now)
+            → Don't overwrite. The 10:00:50 backup marks the start of a new editing
+               session and should be preserved as a restore point.
+
+        Scenario 3 - Multiple rapid saves in succession (overwrite):
+            Existing backups: 10:01:00 (8 sec ago), 10:00:55 (13 sec ago)
+            New save: 10:01:08 (now)
+            → Overwrite the 10:01:00 backup. We're in a burst of rapid saves
+               (autosave or user repeatedly saving). Keep only the most recent
+               from this burst to avoid clutter.
+
+        Scenario 4 - Insufficient backup history (no overwrite):
+            Existing backups: 10:00:00
+            New save: 10:00:05 (now)
+            → Don't overwrite. Need at least 2 backups to detect a burst pattern.
+
+        Args:
+            backup_dir: Directory containing backup files.
+            filename: Original notebook filename to check backups for.
+            timestamp: Current timestamp when the backup is being considered.
+
+        Returns:
+            True if the new backup should overwrite the most recent backup, False otherwise.
+        """
         existing_backups = sorted(self.list_backups(backup_dir, filename), reverse=True)
         if len(existing_backups) < 2:
             return False
