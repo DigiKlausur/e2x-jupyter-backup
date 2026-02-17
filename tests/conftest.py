@@ -1,6 +1,5 @@
 """Shared fixtures for e2x-jupyter-backup tests."""
 
-import os
 from logging import Logger
 from unittest.mock import MagicMock
 
@@ -62,7 +61,7 @@ def backup_app_with_absolute_backup_dir(tmp_path):
     """Create an E2xBackupApp instance with an absolute backup directory."""
     app = E2xBackupApp()
     app.log = Logger("test_logger")
-    app.backup_dir = os.path.abspath(tmp_path / "absolute_backup_dir")
+    app.backup_dir = (tmp_path / "absolute_backup_dir").as_posix()
     return app
 
 
